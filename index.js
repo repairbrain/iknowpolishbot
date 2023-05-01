@@ -35,9 +35,11 @@ bot.command("ethereum", (ctx) => {
     });
 });
 
-expressApp.use(bot.webhookCallback("/secret-path"));
-bot.telegram.setWebhook("https://iknowpolish.herokuapp.com/secret-path");
-
-// bot.launch();
+if (process.env.environment == "PRODUCTION") {
+  expressApp.use(bot.webhookCallback("/secret-path"));
+  bot.telegram.setWebhook("https://iknowpolish.herokuapp.com/secret-path");
+} else {
+  bot.launch();
+}
 
 expressApp.listen(port, () => console.log(`Listening on ${port}`));
