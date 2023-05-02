@@ -29,21 +29,6 @@ bot.command("start", (ctx) => {
   );
 });
 
-// bot.command("ethereum", (ctx) => {
-//   var rate;
-//   console.log(ctx.from);
-//   axios
-//     .get(
-//       `https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd`
-//     )
-//     .then((response) => {
-//       console.log(response.data);
-//       rate = response.data.ethereum;
-//       const message = `Hello, today the ethereum price is ${rate.usd}USD`;
-//       bot.telegram.sendMessage(ctx.chat.id, message, {});
-//     });
-// });
-
 bot.on(message("text"), async (ctx) => {
   const msgSplitted = ctx.update.message.text.split("-");
   const phrase = msgSplitted[0];
@@ -58,7 +43,7 @@ bot.on(message("text"), async (ctx) => {
     frequency_penalty: 0.0,
     presence_penalty: 0.0,
   });
-  console.log("completion.data", completion.data);
+  //   console.log("completion.data", completion.data);
 
   await ctx.reply(completion.data.choices[0].text);
 });
