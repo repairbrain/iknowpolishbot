@@ -3,7 +3,9 @@ const { Configuration, OpenAIApi } = require("openai");
 const { Telegraf } = require("telegraf");
 const { message } = require("telegraf/filters");
 
-const bot = new Telegraf(functions.config().telegram.token);
+const bot = new Telegraf(functions.config().telegram.token, {
+  telegram: { webhookReply: true },
+});
 
 const configuration = new Configuration({
   apiKey: functions.config().openai.apikey,
@@ -37,9 +39,9 @@ bot.on(message("text"), async (ctx) => {
   await ctx.reply(completion.data.choices[0].text);
 });
 
-bot.launch();
-
-exports.iknowpolishbot = functions.https.onRequest((request, response) => {
-  functions.logger.log("Incoming message", request.body);
-  return bot.handleUpdate(request.body, response);
-});
+exports.iknowpolishbot = functions
+  .region("europe-west1")
+  .https.onRequest((request, response) => {
+    functions.logger.log("Incoming message", request.body);
+    bot.handleUpdate(request.body, response);
+  });
