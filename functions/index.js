@@ -16,7 +16,7 @@ bot.command("start", (ctx) => {
   console.log(ctx.from);
   bot.telegram.sendMessage(
     ctx.chat.id,
-    "Контекстуальный переводчик на польский язык.\n\nДля качественного перевода напишите фразу в формате: 'фраза-контекст',\nнапример: 'есть ли у Вас таблетки от гриппа?-в аптеке,вежливо'",
+    "Контекстуальный переводчик на польский язык.\n\nНапишите фразу в формате: 'фраза-контекст',\nнапример: 'есть ли у Вас таблетки от гриппа?-в аптеке'\nИспользование контекста не обязательно, он нужен для улучшения качества перевода.",
     {}
   );
 });
@@ -25,10 +25,13 @@ bot.on(message("text"), async (ctx) => {
   const msgSplitted = ctx.update.message.text.split("-");
   const phrase = msgSplitted[0];
   const msgContext = msgSplitted[1];
+  const prompt = msgContext
+    ? `Translate this into Polish: ${phrase}.Use the context: ${msgContext}.Don't mention context phrases in the output,just for translation improvement`
+    : `Translate this into Polish: ${phrase}`;
 
   const completion = await openai.createCompletion({
     model: "text-davinci-003",
-    prompt: `Translate this into Polish: ${phrase}.Use the context: ${msgContext}.Don't mention context phrases in the output,just for translation improvement`,
+    prompt,
     temperature: 0.3,
     max_tokens: 100,
     top_p: 1.0,
